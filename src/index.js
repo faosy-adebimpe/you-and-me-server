@@ -4,6 +4,7 @@ const { StatusCodes } = require('http-status-codes');
 const cookieParser = require('cookie-parser');
 const connect = require('./lib/connect');
 const { express, app, server } = require('./lib/socket');
+const alwaysLive = require('./lib/always-live');
 
 // consume immediate module
 require('express-async-errors');
@@ -11,13 +12,24 @@ require('dotenv').config();
 
 // variables
 const PORT = process.env.PORT || 5000;
+const DOMAIN =
+    process.env.DOMAIN ||
+    (process.env.NODE_ENV === 'development'
+        ? 'http://127.0.1'
+        : 'http://127.0.1');
 
 // middleware
-app.use(cors({
-    origin: ['http://localhost:3000', 'http://localhost:5173'],
-    credentials: true,
-    allowedHeaders: ['Content-Type', 'Authorization']
-}))
+app.use(
+    cors({
+        origin: [
+            'http://localhost:3000',
+            'http://localhost:5173',
+            process.env.FRONTEND_URL,
+        ],
+        credentials: true,
+        allowedHeaders: ['Content-Type', 'Authorization'],
+    })
+);
 app.use(express.json());
 app.use(cookieParser());
 // app.use(express.urlencoded({ extended: true }));
@@ -51,9 +63,16 @@ const start = async () => {
 
         // start server
         server.listen(PORT, () => {
-            console.log(
-                `Server is running on port ${process.env.NODE_ENV === 'development' ? 'https' : 'http'}://127.0.0.1:${PORT}...`
-            );
+            // console.log(
+            //     `Server is running on port ${
+            //         process.env.NODE_ENV === 'development' ? 'https' : 'http'
+            //     }://127.0.0.1:${PORT}...`
+            // );
+            console.log(`Server is running on: ${DOMAIN}:${PORT}...`);
+
+            if (process.env.NODE_ENV === 'production') {
+                alwaysLive();
+            }
         });
     } catch (error) {
         console.log(error);
