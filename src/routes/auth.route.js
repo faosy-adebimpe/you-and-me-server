@@ -1,0 +1,37 @@
+const { StatusCodes } = require('http-status-codes');
+const express = require('express');
+
+// create router
+const router = express.Router();
+
+// import controller
+const {
+    register,
+    login,
+    logout,
+    checkAuth,
+    forgotPassword,
+    createVerificationEmail,
+    verifyEmail,
+    verifyOTP,
+    changePassword,
+} = require('../controllers/auth.controller');
+
+// import middlewares
+const authenticated = require('../middlewares/authenticated.middleware');
+
+// create routes
+router.route('/register').post(register);
+router.route('/login').post(login);
+router.route('/logout').post(authenticated, logout);
+router.route('/check-auth').get(authenticated, checkAuth)
+router
+    .route('/request-verification-email')
+    .post(authenticated, createVerificationEmail);
+router.route('/verify-email').post(verifyEmail);
+router.route('/forgot-password').post(forgotPassword);
+router.route('/forgot-password/verify-otp').post(verifyOTP);
+router.route('/forgot-password/change-password').post(changePassword);
+
+// export router
+module.exports = router;
