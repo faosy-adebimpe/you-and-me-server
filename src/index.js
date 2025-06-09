@@ -12,11 +12,7 @@ require('dotenv').config();
 
 // variables
 const PORT = process.env.PORT || 5000;
-const DOMAIN =
-    process.env.DOMAIN ||
-    (process.env.NODE_ENV === 'development'
-        ? 'http://127.0.1'
-        : 'http://127.0.1');
+const DOMAIN = process.env.DOMAIN || 'http://127.0.1';
 
 // middleware
 app.use(

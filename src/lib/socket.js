@@ -1,24 +1,9 @@
 const express = require('express');
 const http = require('http');
-const https = require('https');
-const fs = require('fs');
-const { resolve } = require('path');
 const { Server } = require('socket.io');
 
 const app = express();
-
-// creating server
-const sslOptions = {
-    key: fs.readFileSync(resolve(__dirname, './mkcert/127.0.0.1-key.pem')),
-    cert: fs.readFileSync(resolve(__dirname, './mkcert/127.0.0.1.pem')),
-};
-
-let server;
-if (process.env.NODE_ENV === 'development') {
-    server = https.createServer(sslOptions, app);
-} else {
-    server = http.createServer(app);
-}
+const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
