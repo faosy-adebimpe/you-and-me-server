@@ -14,7 +14,7 @@ const {
     createVerificationEmail,
     verifyEmail,
     verifyOTP,
-    changePassword,
+    resetPassword,
 } = require('../controllers/auth.controller');
 
 // import middlewares
@@ -30,8 +30,11 @@ router
     .post(authenticated, createVerificationEmail);
 router.route('/verify-email').post(verifyEmail);
 router.route('/forgot-password').post(forgotPassword);
-router.route('/forgot-password/verify-otp').post(verifyOTP);
-router.route('/forgot-password/change-password').post(changePassword);
+// router.route('/forgot-password/verify-otp').post(verifyOTP);
+router.route('/verify-otp').post(verifyOTP);
+// router.route('/forgot-password/change-password').post(changePassword);
+// router.route('/change-password').post(changePassword);
+router.route('/reset-password').post(resetPassword);
 
 // export router
 module.exports = router;

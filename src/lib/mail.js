@@ -2,15 +2,26 @@ const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const otpGenerator = require('otp-generator');
 
-// Create transporter
-const transporter = nodemailer.createTransport({
+// transporter configuration
+const emailConfig = {
+  service: 'gmail',
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS, // Not your real Gmail password!
+  },
+}
+
+const mailtrapConfig = {
     host: 'sandbox.smtp.mailtrap.io',
     port: 2525,
     auth: {
         user: process.env.MAILTRAP_USER,
         pass: process.env.MAILTRAP_PASS,
     },
-});
+}
+
+// Create transporter
+const transporter = nodemailer.createTransport(process.env.NODE_ENV === 'production' ? emailConfig : mailtrapConfig);
 
 const sendVerificationEmail = async (email, id) => {
     try {
@@ -23,10 +34,10 @@ const sendVerificationEmail = async (email, id) => {
         const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
         const message = `
             <div style="font-family: 'Segoe UI', Arial, Helvetica, sans-serif; color: #333;">
-                <h1 style="color: #4CAF50;">Email Verification</h1>
+                <h1 style="color: #4169e1;">Email Verification</h1>
                 <p>Thank you for registering with You & Me!</p>
                 <p>Please verify your email address by clicking the link below:</p>
-                <a href="${verificationLink}" style="color: #4CAF50; text-decoration: none;">Verify Email</a>
+                <a href="${verificationLink}" style="color: #4169e1; text-decoration: none;">Verify Email</a>
                 <p>If the button above does not work, copy and paste the following link into your browser:</p>
                 <p>${verificationLink}</p>
                 <p><strong>Note:</strong> This verification link will expire in 10 minutes. Please verify your email before it becomes invalid.</p>
@@ -65,15 +76,10 @@ const sendOTPEmail = async (email) => {
         // Create OTP email message
         const message = `
             <div style="font-family: 'Segoe UI', Arial, Helvetica, sans-serif; color: #333;">
-                <h1 style="color: #4CAF50;">Your OTP Code</h1>
+                <h1 style="color: #4169e1;">Your OTP Code</h1>
                 <p>Thank you for using You & Me!</p>
                 <p>Your One-Time Password (OTP) is:</p>
-                <p style="font-size: 24px; font-weight: bold; color: #4CAF50;">${otp}</p>
-                <button 
-                    onclick="navigator.clipboard.writeText('${otp}')" 
-                    style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px;">
-                    Copy OTP to Clipboard
-                </button>
+                <p style="font-size: 24px; font-weight: bold; color: #4169e1;">${otp}</p>
                 <p><strong>Note:</strong> This OTP will expire in 10 minutes. Please use it before it becomes invalid.</p>
                 <p>If you did not request this OTP, please ignore this email.</p>
                 <p>Best regards,</p>
@@ -101,3 +107,10 @@ module.exports = {
     sendVerificationEmail,
     sendOTPEmail,
 };
+
+
+// <button 
+                //     onclick="navigator.clipboard.writeText('${otp}')" 
+                //     style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px;">
+                //     Copy OTP to Clipboard
+                // </button>

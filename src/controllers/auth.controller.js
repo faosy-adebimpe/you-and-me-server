@@ -156,7 +156,8 @@ const forgotPassword = async (req, res) => {
     // await sendVerificationEmail(email, resetToken);
 
     return res.status(StatusCodes.OK).json({
-        message: 'Password reset email sent successfully',
+        // message: 'Password reset email sent successfully',
+        message: 'OTP sent successfully'
     });
 };
 
@@ -191,7 +192,7 @@ const verifyOTP = async (req, res) => {
         .json({ message: 'OTP verified successfully' });
 };
 
-const changePassword = async (req, res) => {
+const resetPassword = async (req, res) => {
     const { email, password } = req.body;
     if (!email || !password) {
         throw new BadRequestError('Email and password are required');
@@ -204,7 +205,7 @@ const changePassword = async (req, res) => {
 
     // check if otp is expired
     if (user.forgotPasswordTokenExpires < Date.now()) {
-        throw new BadRequestError('OTP is expired');
+        throw new BadRequestError('OTP has expired');
     }
 
     // update password
@@ -229,5 +230,5 @@ module.exports = {
     verifyEmail,
     forgotPassword,
     verifyOTP,
-    changePassword,
+    resetPassword,
 };
