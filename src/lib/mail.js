@@ -11,6 +11,7 @@ const emailConfig = {
   },
 }
 
+
 const mailtrapConfig = {
     host: 'sandbox.smtp.mailtrap.io',
     port: 2525,
@@ -49,7 +50,10 @@ const sendVerificationEmail = async (email, id) => {
 
         // Send email
         const info = await transporter.sendMail({
-            from: `You & Me <${process.env.MAIL_USER}>`,
+            // from: `You & Me <${process.env.MAIL_USER}>`,
+            from: process.env.NODE_ENV === 'production'
+            ? `You & Me <${process.env.MAIL_USER}>`
+            : 'You & Me <noreply@youandme.fake>',
             to: email,
             subject: 'Verify Your Email Address',
             html: message,
@@ -89,7 +93,10 @@ const sendOTPEmail = async (email) => {
 
         // Send OTP to email
         const info = await transporter.sendMail({
-            from: `You & Me <${process.env.MAIL_USER}>`,
+            // from: `You & Me <${process.env.MAIL_USER}>`,
+            from: process.env.NODE_ENV === 'production'
+            ? `You & Me <${process.env.MAIL_USER}>`
+            : 'You & Me <noreply@youandme.fake>',
             to: email,
             subject: 'Your OTP Code',
             html: message,
