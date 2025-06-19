@@ -32,7 +32,7 @@ const sendVerificationEmail = async (email, id) => {
         });
 
         // Create verification email message
-        const verificationLink = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+        const verificationLink = `${process.env.FRONTEND_URL}/auth/verify-email?token=${verificationToken}`;
         const message = `
             <div style="font-family: 'Segoe UI', Arial, Helvetica, sans-serif; color: #333;">
                 <h1 style="color: #4169e1;">Email Verification</h1>

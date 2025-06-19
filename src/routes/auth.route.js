@@ -10,6 +10,7 @@ const {
     login,
     logout,
     checkAuth,
+    uploadProfilePicture,
     forgotPassword,
     createVerificationEmail,
     verifyEmail,
@@ -24,7 +25,10 @@ const authenticated = require('../middlewares/authenticated.middleware');
 router.route('/register').post(register);
 router.route('/login').post(login);
 router.route('/logout').post(authenticated, logout);
-router.route('/check-auth').get(authenticated, checkAuth)
+router.route('/check-auth').get(authenticated, checkAuth);
+router
+    .route('/upload-profile-picture')
+    .post(authenticated, uploadProfilePicture);
 router
     .route('/request-verification-email')
     .post(authenticated, createVerificationEmail);

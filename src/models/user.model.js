@@ -98,10 +98,23 @@ userSchema.methods.createCookie = function (res) {
         _id: this._id,
         username: this.username,
         email: this.email,
+        image: this.image,
         acceptTerms: this.acceptTerms,
         role: this.role,
         verified: this.verified,
     };
+
+    // const userObject = {...this};
+    // delete userObject.password;
+
+    // const tokenData = {
+    //     _id: this._id,
+    //     username: this.username,
+    //     email: this.email,
+    //     acceptTerms: this.acceptTerms,
+    //     role: this.role,
+    //     verified: this.verified,
+    // };
 
     const authToken = jwt.sign(tokenData, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_LIFETIME,

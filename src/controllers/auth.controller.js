@@ -4,6 +4,7 @@ const User = require('../models/user.model');
 const { BadRequestError, UnauthenticatedError } = require('../errors');
 const { sendVerificationEmail } = require('../lib/mail'); // import sendVerificationEmail function
 const { sendOTPEmail } = require('../lib/mail'); // import sendOTPEmail function
+const { uploadImage } = require('../lib/cloudinary'); // import uploadImage function
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -79,8 +80,35 @@ const logout = async (req, res) => {
 };
 
 const checkAuth = async (req, res) => {
-    res.status(StatusCodes.OK).json(req.user);
-}
+    const { _id } = req.user; // get user id from request
+    const user = await User.findOne({ _id });
+    res.status(StatusCodes.OK).json(user);
+};
+
+const uploadProfilePicture = async (req, res) => {
+    const { _id } = req.user;
+    const { profilePicture } = req.body;
+    const user = await User.findOne({ _id });
+    if (!user) {
+        throw new BadRequestError('User is not registered');
+    }
+
+    // check if file is provided
+    if (!profilePicture) {
+        throw new BadRequestError('Profile picture is required');
+    }
+
+    // update user profile picture
+    const imageUrl = await uploadImage(profilePicture); // upload image to cloudinary
+    user.image = imageUrl; // set profile picture url
+
+    // save to the database;
+    await user.save();
+    return res.status(StatusCodes.OK).json({
+        message: 'Profile picture updated successfully',
+        user,
+    });
+};
 
 const createVerificationEmail = async (req, res) => {
     const { _id } = req.user;
@@ -157,7 +185,7 @@ const forgotPassword = async (req, res) => {
 
     return res.status(StatusCodes.OK).json({
         // message: 'Password reset email sent successfully',
-        message: 'OTP sent successfully'
+        message: 'OTP sent successfully',
     });
 };
 
@@ -226,6 +254,7 @@ module.exports = {
     login,
     logout,
     checkAuth,
+    uploadProfilePicture,
     createVerificationEmail,
     verifyEmail,
     forgotPassword,
