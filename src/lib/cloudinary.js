@@ -2,6 +2,8 @@ const cloudinary = require('cloudinary').v2;
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
     process.env;
 
+const { BadRequestError } = require('../errors');
+
 // Configure Cloudinary with environment variables
 cloudinary.config({
     cloud_name: CLOUDINARY_CLOUD_NAME,
@@ -20,8 +22,11 @@ uploadImage = async (filePath) => {
         // return result; // Return the upload result
         return result.secure_url; // Return the upload result secure/https url
     } catch (error) {
-        console.error('Error uploading image to Cloudinary:', error);
-        throw error; // Propagate the error
+        // console.error('Error uploading image to Cloudinary:', error);
+        throw new BadRequestError(
+            `Error uploading image to Cloudinary: ${error}`
+        );
+        // throw error; // Propagate the error
     }
 };
 

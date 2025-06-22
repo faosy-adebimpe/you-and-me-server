@@ -27,6 +27,10 @@ const errorHandlerMiddleware = (err, req, res, next) => {
         defaultError.message = `No item found with id: ${err.value}`;
     }
 
+    if (err.errno === -3008 || err.code === 'ENOTFOUND') {
+        defaultError.message = 'Failed to upload image';
+    }
+
     return res
         .status(defaultError.statusCode)
         .json({ message: defaultError.message });

@@ -10,6 +10,7 @@ const {
     login,
     logout,
     checkAuth,
+    updateProfile,
     uploadProfilePicture,
     forgotPassword,
     createVerificationEmail,
@@ -26,6 +27,7 @@ router.route('/register').post(register);
 router.route('/login').post(login);
 router.route('/logout').post(authenticated, logout);
 router.route('/check-auth').get(authenticated, checkAuth);
+router.route('/update-profile').post(authenticated, updateProfile);
 router
     .route('/upload-profile-picture')
     .post(authenticated, uploadProfilePicture);

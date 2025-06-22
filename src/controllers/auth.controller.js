@@ -5,6 +5,7 @@ const { BadRequestError, UnauthenticatedError } = require('../errors');
 const { sendVerificationEmail } = require('../lib/mail'); // import sendVerificationEmail function
 const { sendOTPEmail } = require('../lib/mail'); // import sendOTPEmail function
 const { uploadImage } = require('../lib/cloudinary'); // import uploadImage function
+const { validateFields, invalidFields } = require('../utils/validate-fields');
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
@@ -83,6 +84,51 @@ const checkAuth = async (req, res) => {
     const { _id } = req.user; // get user id from request
     const user = await User.findOne({ _id });
     res.status(StatusCodes.OK).json(user);
+};
+
+const updateProfile = async (req, res) => {
+    // get user id
+    const { _id } = req.user;
+    // optional fields
+    const optionalFields = ['middleName', 'image'];
+    // check validations
+    const validated = validateFields(req.body, optionalFields);
+    if (!validated) {
+        const fieldsArray = invalidFields(req.body, optionalFields);
+        const fields = fieldsArray.join(', ');
+        throw new BadRequestError(
+            `<${fields}> ${fieldsArray > 1 ? 'are' : 'is'} required`
+        );
+    }
+
+    const { firstName, middleName, lastName, image, gender, dob } = req.body;
+
+    const user = await User.findOne({ _id });
+    // update
+    user.firstName = firstName;
+    user.lastName = lastName;
+    user.gender = gender;
+    user.dob = dob;
+    user.profileCompleted = true;
+
+    // check if lastName and image is provided
+    if (middleName) {
+        user.middleName = middleName;
+    }
+
+    if (image) {
+        // upload image and get image url from claudinary;
+        const imageUrl = await uploadImage(image);
+        user.image = imageUrl;
+    }
+
+    // save to the database;
+    await user.save();
+
+    res.status(StatusCodes.OK).json({
+        message: 'Profile updated successfully',
+        data: user,
+    });
 };
 
 const uploadProfilePicture = async (req, res) => {
@@ -254,6 +300,7 @@ module.exports = {
     login,
     logout,
     checkAuth,
+    updateProfile,
     uploadProfilePicture,
     createVerificationEmail,
     verifyEmail,

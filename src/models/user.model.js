@@ -27,6 +27,11 @@ const userSchema = new Schema({
     lastName: String,
     gender: String,
     image: String,
+    dob: String,
+    profileCompleted: {
+        type: Boolean,
+        default: false,
+    },
 
     password: {
         type: String,
