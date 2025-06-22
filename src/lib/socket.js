@@ -24,7 +24,7 @@ const getSocketId = (id) => {
 
 io.on('connection', (socket) => {
     // connected
-    console.log('a user connected', socket.id);
+    // console.log('a user connected', socket.id);
 
     // disconnected
     socket.on('disconnect', () => {
