@@ -56,7 +56,7 @@ app.use(errorHandlerMiddleware); // 500 internal server error
 const start = async () => {
     try {
         await connect(process.env.MONGO_URI);
-        console.log('Connected to the database...');
+        // console.log('Connected to the database...');
 
         // start server
         server.listen(PORT, () => {

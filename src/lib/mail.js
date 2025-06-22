@@ -4,13 +4,12 @@ const otpGenerator = require('otp-generator');
 
 // transporter configuration
 const emailConfig = {
-  service: 'gmail',
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS, // Not your real Gmail password!
-  },
-}
-
+    service: 'gmail',
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS, // Not your real Gmail password!
+    },
+};
 
 const mailtrapConfig = {
     host: 'sandbox.smtp.mailtrap.io',
@@ -19,10 +18,12 @@ const mailtrapConfig = {
         user: process.env.MAILTRAP_USER,
         pass: process.env.MAILTRAP_PASS,
     },
-}
+};
 
 // Create transporter
-const transporter = nodemailer.createTransport(process.env.NODE_ENV === 'production' ? emailConfig : mailtrapConfig);
+const transporter = nodemailer.createTransport(
+    process.env.NODE_ENV === 'production' ? emailConfig : mailtrapConfig
+);
 
 const sendVerificationEmail = async (email, id) => {
     try {
@@ -51,9 +52,10 @@ const sendVerificationEmail = async (email, id) => {
         // Send email
         const info = await transporter.sendMail({
             // from: `You & Me <${process.env.MAIL_USER}>`,
-            from: process.env.NODE_ENV === 'production'
-            ? `You & Me <${process.env.MAIL_USER}>`
-            : 'You & Me <noreply@youandme.fake>',
+            from:
+                process.env.NODE_ENV === 'production'
+                    ? `You & Me <${process.env.MAIL_USER}>`
+                    : 'You & Me <noreply@youandme.fake>',
             to: email,
             subject: 'Verify Your Email Address',
             html: message,
@@ -94,9 +96,10 @@ const sendOTPEmail = async (email) => {
         // Send OTP to email
         const info = await transporter.sendMail({
             // from: `You & Me <${process.env.MAIL_USER}>`,
-            from: process.env.NODE_ENV === 'production'
-            ? `You & Me <${process.env.MAIL_USER}>`
-            : 'You & Me <noreply@youandme.fake>',
+            from:
+                process.env.NODE_ENV === 'production'
+                    ? `You & Me <${process.env.MAIL_USER}>`
+                    : 'You & Me <noreply@youandme.fake>',
             to: email,
             subject: 'Your OTP Code',
             html: message,
@@ -115,9 +118,8 @@ module.exports = {
     sendOTPEmail,
 };
 
-
-// <button 
-                //     onclick="navigator.clipboard.writeText('${otp}')" 
-                //     style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px;">
-                //     Copy OTP to Clipboard
-                // </button>
+// <button
+//     onclick="navigator.clipboard.writeText('${otp}')"
+//     style="background-color: #4CAF50; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 5px;">
+//     Copy OTP to Clipboard
+// </button>
