@@ -2,26 +2,34 @@ const { StatusCodes } = require('http-status-codes');
 const User = require('../models/user.model');
 const Message = require('../models/message.model');
 const { BadRequestError, NotFoundError } = require('../errors');
-const {io, getSocketId} = require('../lib/socket');
+const { io, getSocketId } = require('../lib/socket');
 
 const getUsers = async (req, res) => {
     const { _id: id } = req.user;
-    const users = await User.find({ _id: { $ne: id } }).select('-password -__v');
+    const { username } = req.query;
+
+    const queryObject = { _id: { $ne: id } };
+    if (username) {
+        queryObject.username = { $regex: username };
+    }
+
+    // const users = await User.find({ _id: { $ne: id } }).select('-password -__v');
+    const users = await User.find(queryObject).select('-password -__v');
     res.status(StatusCodes.OK).json(users);
 };
 
 const getUser = async (req, res) => {
-    const {userId: _id} = req.params;
+    const { userId: _id } = req.params;
     if (!_id) {
         throw new BadRequestError('User id not provided');
     }
-    const user = await User.findOne({_id}).select('-password -__v');
+    const user = await User.findOne({ _id }).select('-password -__v');
     if (!user) {
         throw new NotFoundError(`User with id <${_id}> not found`);
     }
 
     res.status(StatusCodes.OK).json(user);
-}
+};
 
 const getMessages = async (req, res) => {
     const { receiverId } = req.params;
@@ -64,7 +72,7 @@ const sendMessage = async (req, res) => {
     delete newMessageObject.__v;
 
     const socketId = getSocketId(receiverId);
-    if(socketId){
+    if (socketId) {
         // console.log({socketId});
         io.to(socketId).emit('new-message', newMessageObject);
         // console.log(io);
