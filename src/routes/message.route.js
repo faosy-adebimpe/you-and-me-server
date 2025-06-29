@@ -9,6 +9,7 @@ const {
     getUser,
     getMessages,
     getUnreadMessages,
+    readMessages,
     sendMessage,
 } = require('../controllers/message.controller');
 
@@ -21,6 +22,7 @@ router.route('/users').get(getUsers);
 router.route('/users/:userId').get(getUser);
 router.route('/:receiverId').get(getMessages);
 router.route('/unread/messages').get(getUnreadMessages);
+router.route('/read/:senderId').patch(readMessages);
 router.route('/send/:receiverId').post(sendMessage);
 
 // export router

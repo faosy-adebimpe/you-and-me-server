@@ -60,6 +60,19 @@ const getUnreadMessages = async (req, res) => {
     res.status(StatusCodes.OK).json(unreadMessages);
 };
 
+const readMessages = async (req, res) => {
+    const { _id: receiverId } = req.user;
+    const { senderId } = req.params;
+
+    const messages = await Message.updateMany(
+        { senderId, receiverId, read: false },
+        { $set: { read: true } },
+        { new: true }
+    ).select('-__v');
+
+    res.status(StatusCodes.OK).json(messages);
+};
+
 const sendMessage = async (req, res) => {
     const { receiverId } = req.params;
     const { _id: senderId } = req.user;
@@ -100,5 +113,6 @@ module.exports = {
     getUser,
     getMessages,
     getUnreadMessages,
+    readMessages,
     sendMessage,
 };
