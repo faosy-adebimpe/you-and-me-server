@@ -14,6 +14,10 @@ const messageSchema = new Schema(
         },
         text: String,
         image: String,
+        read: {
+            type: Boolean,
+            default: false,
+        },
     },
     { timestamps: true }
 );

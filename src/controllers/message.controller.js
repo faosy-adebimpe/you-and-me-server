@@ -48,6 +48,18 @@ const getMessages = async (req, res) => {
 
     res.status(StatusCodes.OK).json(messages);
 };
+
+const getUnreadMessages = async (req, res) => {
+    const { _id } = req.user;
+
+    const unreadMessages = await Message.find({
+        receiverId: _id,
+        read: false,
+    }).select('-__v');
+
+    res.status(StatusCodes.OK).json(unreadMessages);
+};
+
 const sendMessage = async (req, res) => {
     const { receiverId } = req.params;
     const { _id: senderId } = req.user;
@@ -83,4 +95,10 @@ const sendMessage = async (req, res) => {
     // todo: add realtime with socket.io
 };
 
-module.exports = { getUsers, getUser, getMessages, sendMessage };
+module.exports = {
+    getUsers,
+    getUser,
+    getMessages,
+    getUnreadMessages,
+    sendMessage,
+};
