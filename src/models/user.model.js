@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const capitalize = require('../utils/capitalize');
 
 // create user schema
 const userSchema = new Schema({
@@ -73,6 +74,23 @@ userSchema.pre('save', async function () {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(this.password, salt);
     this.password = hashedPassword;
+
+    // firstName
+    // middleName
+    // lastName
+    // update names
+    if (this.isModified('username')) {
+        this.username = capitalize(this.username);
+    }
+    if (this.isModified('firstName')) {
+        this.firstName = capitalize(this.firstName);
+    }
+    if (this.isModified('middleName')) {
+        this.middleName = capitalize(this.middleName);
+    }
+    if (this.isModified('lastName')) {
+        this.lastName = capitalize(this.lastName);
+    }
 });
 
 // compare password

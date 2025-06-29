@@ -10,7 +10,7 @@ const getUsers = async (req, res) => {
 
     const queryObject = { _id: { $ne: id } };
     if (username) {
-        queryObject.username = { $regex: username };
+        queryObject.username = { $regex: username, $options: 'i' };
     }
 
     // const users = await User.find({ _id: { $ne: id } }).select('-password -__v');
