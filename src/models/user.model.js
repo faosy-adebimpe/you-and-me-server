@@ -70,10 +70,13 @@ const userSchema = new Schema({
 
 // hash password before saving it to the database
 userSchema.pre('save', async function () {
-    if (!this.isModified('password')) return;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(this.password, salt);
-    this.password = hashedPassword;
+    // if (!this.isModified('password')) return;
+
+    if (this.isModified('password')) {
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(this.password, salt);
+        this.password = hashedPassword;
+    }
 
     // firstName
     // middleName
