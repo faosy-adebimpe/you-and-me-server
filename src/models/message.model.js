@@ -16,7 +16,7 @@ const messageSchema = new Schema(
         image: String,
         sent: {
             type: Boolean,
-            default: false,
+            default: true,
         },
         received: {
             type: Boolean,
