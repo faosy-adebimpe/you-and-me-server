@@ -14,6 +14,14 @@ const messageSchema = new Schema(
         },
         text: String,
         image: String,
+        sent: {
+            type: Boolean,
+            default: false,
+        },
+        received: {
+            type: Boolean,
+            default: false,
+        },
         read: {
             type: Boolean,
             default: false,
