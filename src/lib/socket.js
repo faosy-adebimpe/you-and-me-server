@@ -33,11 +33,21 @@ io.on('connection', (socket) => {
 
     // get user id
     const id = socket.handshake.auth.id;
-    onlineUsers[id] = socket.id;
+    if (id) onlineUsers[id] = socket.id;
+
+    // io.emit('getOnlineUsers', Object.keys(onlineUsers));
+    io.emit('get-online-users', Object.keys(onlineUsers));
+
+    // disconnected;
+    socket.on('disconnect', () => {
+        delete onlineUsers[id];
+        io.emit('get-online-users', Object.keys(onlineUsers));
+        // console.log('a user disconnected', socket.id);
+    });
 
     // events
     socket.on('message', (msg) => {
-        console.log('message: ' + msg);
+        // console.log('message: ' + msg);
         io.emit('message', msg);
     });
 });
