@@ -37,7 +37,7 @@ const userSchema = new Schema({
     password: {
         type: String,
         required: [true, 'Please provide a password'],
-        minlength: [6, 'Password cannot be less than 6 characters'],
+        // minlength: [6, 'Password cannot be less than 6 characters'],
     },
     acceptTerms: {
         type: Boolean,

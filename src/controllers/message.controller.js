@@ -49,6 +49,16 @@ const getMessages = async (req, res) => {
     res.status(StatusCodes.OK).json(messages);
 };
 
+const getAllMessages = async (req, res) => {
+    const { _id } = req.user;
+
+    const unreadMessages = await Message.find({
+        receiverId: _id,
+    }).select('-__v');
+
+    res.status(StatusCodes.OK).json(unreadMessages);
+};
+
 const getUnreadMessages = async (req, res) => {
     const { _id } = req.user;
 
@@ -112,6 +122,7 @@ module.exports = {
     getUsers,
     getUser,
     getMessages,
+    getAllMessages,
     getUnreadMessages,
     readMessages,
     sendMessage,

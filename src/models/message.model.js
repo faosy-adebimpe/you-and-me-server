@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const messageSchema = new Schema(
     {
+        id: String,
         senderId: {
             type: Schema.Types.ObjectId,
             ref: 'User',
