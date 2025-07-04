@@ -50,6 +50,10 @@ io.on('connection', (socket) => {
         // console.log('message: ' + msg);
         io.emit('message', msg);
     });
+
+    socket.on('message-received', (data) => {
+        socket.broadcast.emit('message-received', data);
+    });
 });
 
 module.exports = { express, app, server, io, getSocketId };
