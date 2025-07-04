@@ -52,6 +52,9 @@ const getMessages = async (req, res) => {
 const getAllMessages = async (req, res) => {
     const { _id } = req.user;
 
+    // set received to true first
+    await Message.updateMany({ recieverId: _id }, { $set: { received: true } });
+
     const unreadMessages = await Message.find({
         $or: [{ senderId: _id }, { receiverId: _id }],
     }).select('-__v');
@@ -81,6 +84,12 @@ const getUnreadMessages = async (req, res) => {
 const readMessages = async (req, res) => {
     const { _id: receiverId } = req.user;
     const { senderId } = req.params;
+
+    // set received to true first
+    await Message.updateMany(
+        { senderId, receiverId, received: false },
+        { $set: { received: true } }
+    );
 
     const messages = await Message.updateMany(
         { senderId, receiverId, read: false },
