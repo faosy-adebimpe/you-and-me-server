@@ -51,8 +51,8 @@ io.on('connection', (socket) => {
         io.emit('message', msg);
     });
 
-    socket.on('message-received', (data) => {
-        socket.broadcast.emit('message-received', data);
+    socket.on('update-message-status', (data) => {
+        socket.broadcast.emit('update-message-status', data);
     });
 });
 
